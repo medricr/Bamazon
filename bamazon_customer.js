@@ -36,13 +36,29 @@ connection.connect(function(err){
                 if(res[0].stock_quantity < user_input.number_purchased){
                     console.log("Insufficient quantity of requested item...")
                 }else{
+                    var updated_quantity = res[0].stock_quantity - user_input.number_purchased;
                     console.log("-----Total Order Cost-----\n");
                     console.log("  " + res[0].product_name);
                     console.log("X " + res[0].price);
                     console.log("--------------------------");
                     console.log("= " + res[0].price * user_input.number_purchased);
+                    connection.query(
+                        'UPDATE product_list SET ? WHERE ?',
+                        [
+                            {
+                                stock_quantity: updated_quantity
+                            },
+                            {
+                                id: res[0].id
+                            }
+                        ],
+                        function(err,res){
+                            console.log(res);
+                            show_products();
+                        }
+                    )
                 }
-                connection.end();
+                // connection.end();
                 // console.log(res[0].price);
             }
         )
