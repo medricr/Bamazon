@@ -1,6 +1,7 @@
 // require mysql package and inquirer package to direct flow of program
 var mysql = require('mysql');
 var inquirer = require('inquirer');
+// initialize server connection
 var connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
@@ -11,6 +12,7 @@ var connection = mysql.createConnection({
 // establish connection with mySQL server
 connection.connect(function(err){
     if(err) throw err;
+    // display products
     show_products();
     inquirer.prompt([
         {
@@ -31,7 +33,16 @@ connection.connect(function(err){
             },
             function(err,res){
                 if(err) throw err;
-                console.log(res);
+                if(res[0].stock_quantity < user_input.number_purchased){
+                    console.log("Insufficient quantity of requested item...")
+                }else{
+                    console.log("-----Total Order Cost-----\n");
+                    console.log("  " + res[0].product_name);
+                    console.log("X " + res[0].price);
+                    console.log("--------------------------\n");
+                    console.log("= " + res[0].price * user_input.number_purchased);
+                }
+                // console.log(res[0].price);
             }
         )
     })
