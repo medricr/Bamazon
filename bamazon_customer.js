@@ -39,9 +39,10 @@ connection.connect(function(err){
                     console.log("-----Total Order Cost-----\n");
                     console.log("  " + res[0].product_name);
                     console.log("X " + res[0].price);
-                    console.log("--------------------------\n");
+                    console.log("--------------------------");
                     console.log("= " + res[0].price * user_input.number_purchased);
                 }
+                connection.end();
                 // console.log(res[0].price);
             }
         )
