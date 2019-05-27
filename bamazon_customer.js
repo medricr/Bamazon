@@ -14,6 +14,17 @@ connection.connect(function(err){
     if(err) throw err;
     // display products
     show_products();
+    user_propmt();
+})
+
+function show_products(){
+    connection.query('SELECT * FROM product_list',function(err,res){
+        if(err) throw err;
+        console.log(res);
+    })
+}
+
+function user_propmt(){
     inquirer.prompt([
         {
             type: 'input',
@@ -26,48 +37,45 @@ connection.connect(function(err){
             name: 'number_purchased'
         }
     ]).then(function(user_input){
-        connection.query(
-            'SELECT * FROM product_list WHERE ?',
-            {
-                id: user_input.product_id
-            },
-            function(err,res){
-                if(err) throw err;
-                if(res[0].stock_quantity < user_input.number_purchased){
-                    console.log("Insufficient quantity of requested item...")
-                }else{
-                    var updated_quantity = res[0].stock_quantity - user_input.number_purchased;
-                    console.log("-----Total Order Cost-----\n");
-                    console.log("  " + res[0].product_name);
-                    console.log("X " + res[0].price);
-                    console.log("--------------------------");
-                    console.log("= " + res[0].price * user_input.number_purchased);
-                    connection.query(
-                        'UPDATE product_list SET ? WHERE ?',
-                        [
-                            {
-                                stock_quantity: updated_quantity
-                            },
-                            {
-                                id: res[0].id
-                            }
-                        ],
-                        function(err,res){
-                            console.log(res);
-                            show_products();
-                        }
-                    )
-                }
-                // connection.end();
-                // console.log(res[0].price);
-            }
-        )
+        update_db(user_input.product_id,user_input.number_purchased);
     })
-})
+}
 
-function show_products(){
-    connection.query('SELECT * FROM product_list',function(err,res){
-        if(err) throw err;
-        console.log(res);
-    })
+function update_db(product_id,num_purchased){
+    connection.query(
+        'SELECT * FROM product_list WHERE ?',
+        {
+            id: product_id
+        },
+        function(err,res){
+            if(err) throw err;
+            if(res[0].stock_quantity < num_purchased){
+                console.log("Insufficient quantity of requested item...")
+            }else{
+                var updated_quantity = res[0].stock_quantity - num_purchased;
+                console.log("-----Total Order Cost-----\n");
+                console.log("  " + res[0].product_name);
+                console.log("X " + res[0].price);
+                console.log("--------------------------");
+                console.log("= " + res[0].price * num_purchased);
+                connection.query(
+                    'UPDATE product_list SET ? WHERE ?',
+                    [
+                        {
+                            stock_quantity: updated_quantity
+                        },
+                        {
+                            id: res[0].id
+                        }
+                    ],
+                    function(err,res){
+                        if(err) throw err;
+                        console.log(res);
+                        show_products();
+                        connection.end();
+                    }
+                )
+            }
+        }
+    )
 }
