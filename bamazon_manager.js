@@ -89,11 +89,6 @@ function add_inventory(){
                     name: 'increase_number'
                 }
             ]).then(function(input){
-                // console.log("test test test");
-                // var chosen_item = input.chosen_item;
-                // var increase_number = input.increase_number;
-                // console.log(res[input.chosen_item-1].stock_quantity);
-                // console.log(input.increase_number);
                 var current_num = res[input.chosen_item-1].stock_quantity += parseInt(input.increase_number,10);
                 console.log()
                 connection.query(
@@ -108,15 +103,6 @@ function add_inventory(){
                     ],
                     function(err,res){
                         if(err) throw err;
-                        // console.log(res);
-                        // console.log(res.length);
-                        // for(let i = 0; i < res.length; i++){
-                        //     res[0].stock_quantity += input.increase_number;
-                        //     console.log('item updated');
-                        // }
-                        // else{
-                        //     res[0].stock_qantity += increase_number;
-                        // }
                         console.log(res);
                         show_items();
 
@@ -129,5 +115,42 @@ function add_inventory(){
 }
 // function to add a new product to the inventory
 function add_item(){
-    // some code
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'What new product would you like to add to the inventory?',
+            name: 'new_name'
+        },
+        {
+            type: 'input',
+            message: 'Which department will this item be filed under?',
+            name: 'new_dept'
+        },
+        {
+            type: 'input',
+            message: "What is the cost-per-unit of this new item?",
+            name: "new_price"
+        },
+        {
+            type: 'input',
+            message: 'How many of this item will we initially have in stock?',
+            name: 'new_count'
+        }
+    ]).then(function(new_input){
+        connection.query(
+            'INSERT INTO product_list SET ?',
+            {
+                product_name: new_input.new_name,
+                department_name: new_input.new_dept,
+                price: new_input.new_price,
+                stock_quantity: new_input.new_count
+
+            },
+            function(err,res){
+                if(err) throw err;
+                show_items();
+            }
+            // show_items()
+        )
+    })
 }
