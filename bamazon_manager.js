@@ -68,7 +68,64 @@ function show_low(){
 }
 // function to add a number to any inventory item
 function add_inventory(){
-    // some code
+    console.clear();
+    connection.query(
+        'SELECT * FROM product_list',function(err,res){
+            if(err) throw err;
+            console.log(res);
+            inquirer.prompt([
+                {
+                    // type: 'input',
+                    // message: "which item's stock would you like to increase?",
+                    // name: 'chosen_item'
+                    type: 'list',
+                    message: "Which item's inventory would you like to increase?",
+                    choices: [1,2,3,4,5,6,7,8,9,10],
+                    name: 'chosen_item'
+                },
+                {
+                    type: 'input',
+                    message: 'How many more units would you like to order?',
+                    name: 'increase_number'
+                }
+            ]).then(function(input){
+                // console.log("test test test");
+                // var chosen_item = input.chosen_item;
+                // var increase_number = input.increase_number;
+                // console.log(res[input.chosen_item-1].stock_quantity);
+                // console.log(input.increase_number);
+                var current_num = res[input.chosen_item-1].stock_quantity += parseInt(input.increase_number,10);
+                console.log()
+                connection.query(
+                    'UPDATE product_list SET ? WHERE ?',
+                    [
+                        {
+                            stock_quantity: current_num
+                        },
+                        {
+                            id: input.chosen_item
+                        },
+                    ],
+                    function(err,res){
+                        if(err) throw err;
+                        // console.log(res);
+                        // console.log(res.length);
+                        // for(let i = 0; i < res.length; i++){
+                        //     res[0].stock_quantity += input.increase_number;
+                        //     console.log('item updated');
+                        // }
+                        // else{
+                        //     res[0].stock_qantity += increase_number;
+                        // }
+                        console.log(res);
+                        show_items();
+
+                    }
+                )
+            })
+        }
+    )
+    
 }
 // function to add a new product to the inventory
 function add_item(){
