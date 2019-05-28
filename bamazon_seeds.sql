@@ -11,6 +11,7 @@ CREATE TABLE product_list(
     department_name VARCHAR(30) NULL,
     price INTEGER(255) NULL,
     stock_quantity INTEGER(255) NULL,
+    product_sales INTEGER(255) NULL,
     PRIMARY KEY (id)
 );
 -- populate product_list with some mock products
@@ -26,5 +27,19 @@ VALUES
 ('Calculus Flash Cards','Education',25,30),
 ('Tarot Cards','Recreation',25,40),
 ('Ipad Stylus','Technology',50,100);
+-- create table with columns for department id, name, and overhead costs
+CREATE TABLE department_list(
+    id INTEGER NOT NULL AUTO_INCREMENT,
+    dept_name VARCHAR(30) NULL,
+    overhead_costs INTEGER(255) NULL,
+    PRIMARY KEY (id)
+);
+-- populate department_list with some mock variables
+INSERT INTO department_list (`dept_name`,`overhead_costs`)
+VALUES
+('Clothing',1500),
+('Technology',3000),
+('Recreation',1250),
+('Education',5400);
 
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
