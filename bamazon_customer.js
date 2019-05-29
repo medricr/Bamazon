@@ -62,7 +62,8 @@ function update_db(product_id,num_purchased){
                     'UPDATE product_list SET ? WHERE ?',
                     [
                         {
-                            stock_quantity: updated_quantity
+                            stock_quantity: updated_quantity,
+                            product_sales: res[0].product_sales + res[0].price * num_purchased
                         },
                         {
                             id: res[0].id
