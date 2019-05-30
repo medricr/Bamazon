@@ -1,6 +1,8 @@
 // require mysql package and inquirer package to direct flow of program
 var mysql = require('mysql');
 var inquirer = require('inquirer');
+// require cli table package to better present information to the user
+var table = require('cli-table');
 // initialize server connection
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -49,10 +51,20 @@ function view_sales(){
         //     console.log(res);
         //     connection.end();
         // }
-        'SELECT department_list.id,department_list.dept_name,department_list.overhead_costs,product_list.product_sales FROM department_list INNER JOIN product_list ON department_list.dept_name = product_list.department_name GROUP BY department_name',
+        'SELECT department_list.id,department_list.dept_name,department_list.overhead_costs,SUM(product_list.product_sales) AS sales, COUNT(product_list.id) FROM department_list INNER JOIN product_list ON department_list.dept_name = product_list.department_name GROUP BY department_name',
         function(err,res){
             if(err) throw err;
-            console.log(res);
+            var sales_table = new table({
+                head: ['ID','Department Name','Overhead Costs','Product Sales','Total Profit']
+                // colWidths: 100
+            });
+            for(let i = 0; i < res.length; i++){
+                var profits = (res[i].sales - res[i].overhead_costs);
+                sales_table.push(
+                    [res[i].id,res[i].dept_name,res[i].overhead_costs,res[i].sales,profits]
+                )
+            }
+            console.log(sales_table.toString());
             connection.end();
         }
     )

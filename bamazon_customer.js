@@ -1,6 +1,8 @@
 // require mysql package and inquirer package to direct flow of program
 var mysql = require('mysql');
 var inquirer = require('inquirer');
+// require cli-table to represent data to user more effectively
+var table = require('cli-table');
 // initialize server connection
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -14,17 +16,33 @@ connection.connect(function(err){
     if(err) throw err;
     // display products
     show_products();
-    user_propmt();
+    // user_propmt();
 })
 
 function show_products(){
     connection.query('SELECT * FROM product_list',function(err,res){
         if(err) throw err;
-        console.log(res);
+        var product_table = new table({
+            head: ['ID','Product','Department','Price','Current Stock']
+        });
+        // for(let i = 0; i < res.length; i++){
+        //     product_table.push(
+        //         [res[i].id,res[i].product_name,res[i].department_name,res[i].price,res[i].stock_quantity]
+        //     )
+        // }
+        for(item in res){
+            product_table.push(
+                [res[item].id, res[item].product_name,res[item].department_name,res[item].price,res[item].stock_quantity]
+            )
+        }
+        // console.log(res);
+        console.log(product_table.toString());
+        user_propmt();
     })
 }
 
 function user_propmt(){
+    // show_products();
     inquirer.prompt([
         {
             type: 'input',
@@ -63,7 +81,7 @@ function update_db(product_id,num_purchased){
                     [
                         {
                             stock_quantity: updated_quantity,
-                            product_sales: res[0].product_sales + res[0].price * num_purchased
+                            product_sales: res[0].product_sales + (res[0].price * num_purchased)
                         },
                         {
                             id: res[0].id
@@ -71,8 +89,8 @@ function update_db(product_id,num_purchased){
                     ],
                     function(err,res){
                         if(err) throw err;
-                        console.log(res);
-                        show_products();
+                        // console.log(res);
+                        // show_products();
                         connection.end();
                     }
                 )

@@ -73,6 +73,10 @@ function add_inventory(){
         'SELECT * FROM product_list',function(err,res){
             if(err) throw err;
             console.log(res);
+            var product_array = [];
+            for(item in res){
+                product_array.push(res[item].product_name)
+            }
             inquirer.prompt([
                 {
                     // type: 'input',
@@ -80,7 +84,7 @@ function add_inventory(){
                     // name: 'chosen_item'
                     type: 'list',
                     message: "Which item's inventory would you like to increase?",
-                    choices: [1,2,3,4,5,6,7,8,9,10],
+                    choices: product_array,//[1,2,3,4,5,6,7,8,9,10],
                     name: 'chosen_item'
                 },
                 {
@@ -98,7 +102,7 @@ function add_inventory(){
                             stock_quantity: current_num
                         },
                         {
-                            id: input.chosen_item
+                            product_name: input.chosen_item
                         },
                     ],
                     function(err,res){
