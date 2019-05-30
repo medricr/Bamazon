@@ -22,15 +22,19 @@ connection.connect(function(err){
 function show_products(){
     connection.query('SELECT * FROM product_list',function(err,res){
         if(err) throw err;
+        // create blank cli table
         var product_table = new table({
             head: ['ID','Product','Department','Price','Current Stock']
         });
+        // populate cli table with its respective entries
         for(item in res){
             product_table.push(
                 [res[item].id, res[item].product_name,res[item].department_name,res[item].price,res[item].stock_quantity]
             )
         }
+        // show user the cli table
         console.log(product_table.toString());
+        // prompt the user with the two possible actions
         user_propmt();
     })
 }
@@ -49,10 +53,11 @@ function user_propmt(){
             name: 'number_purchased'
         }
     ]).then(function(user_input){
+        // call the update function, passing the user's input
         update_db(user_input.product_id,user_input.number_purchased);
     })
 }
-
+// update database to reflect the items purchased by the user
 function update_db(product_id,num_purchased){
     connection.query(
         'SELECT * FROM product_list WHERE ?',
@@ -64,6 +69,7 @@ function update_db(product_id,num_purchased){
             if(res[0].stock_quantity < num_purchased){
                 console.log("Insufficient quantity of requested item...")
             }else{
+                // display the total cost of the purchase to the user & update the product stock
                 var updated_quantity = res[0].stock_quantity - num_purchased;
                 console.log("-----Total Order Cost-----\n");
                 console.log("  " + res[0].product_name);
@@ -81,10 +87,8 @@ function update_db(product_id,num_purchased){
                             id: res[0].id
                         }
                     ],
-                    function(err,res){
+                    function(err){
                         if(err) throw err;
-                        // console.log(res);
-                        // show_products();
                         connection.end();
                     }
                 )

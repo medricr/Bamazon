@@ -43,6 +43,7 @@ function supervisor_prompt(){
     })
 }
 
+// A function which allows the user to see the sales by department where sold items 
 function view_sales(){
     connection.query(
         // 'SELECT * FROM department_list',
@@ -51,7 +52,7 @@ function view_sales(){
         //     console.log(res);
         //     connection.end();
         // }
-        'SELECT department_list.id,department_list.dept_name,department_list.overhead_costs,SUM(product_list.product_sales) AS sales, COUNT(product_list.id) FROM department_list INNER JOIN product_list ON department_list.dept_name = product_list.department_name GROUP BY department_name',
+        'SELECT department_list.id,department_list.dept_name,department_list.overhead_costs,SUM(product_list.product_sales) AS sales, COUNT(product_list.id) FROM department_list LEFT JOIN product_list ON department_list.dept_name = product_list.department_name GROUP BY dept_name',
         // 'SELECT * FROM department_list',
         function(err,res){
             if(err) throw err;
@@ -59,10 +60,11 @@ function view_sales(){
                 head: ['ID','Department Name','Overhead Costs','Product Sales','Total Profit']
                 // colWidths: 100
             });
+            // console.log(res);
             for(let i = 0; i < res.length; i++){
                 var profits = (res[i].sales - res[i].overhead_costs);
                 sales_table.push(
-                    [res[i].id,res[i].dept_name,res[i].overhead_costs]//,res[i].sales,profits]
+                    [res[i].id,res[i].dept_name,res[i].overhead_costs]//,res[i].sales]//,profits]
                 )
             }
             console.log(sales_table.toString());
@@ -70,7 +72,13 @@ function view_sales(){
         }
     )
 }
-
+// allows the user to create a department
+// TODO
+// allow the user to create a department & offer them the option to create a inital item to populate that department
+// if they do...
+// set the name & price of that item, and set the sales to 0
+// if they choose not to..
+// create a generic item (name: item, price: 0, stock: 0, etc.....)
 function create_dept(){
     inquirer.prompt([
         {

@@ -88,9 +88,6 @@ function add_inventory(){
             }
             inquirer.prompt([
                 {
-                    // type: 'input',
-                    // message: "which item's stock would you like to increase?",
-                    // name: 'chosen_item'
                     type: 'list',
                     message: "Which item's inventory would you like to increase?",
                     choices: product_array,
@@ -122,7 +119,7 @@ function add_inventory(){
                     ],
                     function(err,res){
                         if(err) throw err;
-                        console.log(res);
+                        // console.log(res);
                         show_items();
 
                     }
@@ -169,7 +166,6 @@ function add_item(){
                 if(err) throw err;
                 show_items();
             }
-            // show_items()
         )
     })
 }

@@ -7,11 +7,11 @@ USE bamazon;
 -- create table with columns for product id, name, department, price, and stock
 CREATE TABLE product_list(
     id INTEGER NOT NULL AUTO_INCREMENT,
-    product_name VARCHAR(30) NULL,
-    department_name VARCHAR(30) NULL,
-    price INTEGER(255) NULL,
-    stock_quantity INTEGER(255) NULL,
-    product_sales INTEGER(255) NULL,
+    product_name VARCHAR(30) NOT NULL DEFAULT 'Item',
+    department_name VARCHAR(30) NOT NULL DEFAULT 'Department',
+    price INTEGER(255) NOT NULL DEFAULT '1',
+    stock_quantity INTEGER(255) NOT NULL DEFAULT '1',
+    product_sales INTEGER(255) NOT NULL DEFAULT '0',
     PRIMARY KEY (id)
 );
 -- populate product_list with some mock products
