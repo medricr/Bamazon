@@ -25,17 +25,11 @@ function show_products(){
         var product_table = new table({
             head: ['ID','Product','Department','Price','Current Stock']
         });
-        // for(let i = 0; i < res.length; i++){
-        //     product_table.push(
-        //         [res[i].id,res[i].product_name,res[i].department_name,res[i].price,res[i].stock_quantity]
-        //     )
-        // }
         for(item in res){
             product_table.push(
                 [res[item].id, res[item].product_name,res[item].department_name,res[item].price,res[item].stock_quantity]
             )
         }
-        // console.log(res);
         console.log(product_table.toString());
         user_propmt();
     })

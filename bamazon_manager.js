@@ -1,6 +1,8 @@
 // require mysql package and inquirer package to direct flow of program
 var mysql = require('mysql');
 var inquirer = require('inquirer');
+// require cli-table package to better present data to the user
+var table = require('cli-table');
 // initialize server connection
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -50,8 +52,15 @@ function manager_prompt(){
 function show_items(){
     connection.query(
         'SELECT * FROM product_list',function(err,res){
-            if(err) throw err;
-            console.log(res);
+            var product_table = new table({
+                head: ['ID','Product','Department','Price','Current Stock']
+            });
+            for(item in res){
+                product_table.push(
+                    [res[item].id, res[item].product_name,res[item].department_name,res[item].price,res[item].stock_quantity]
+                )
+            }
+            console.log(product_table.toString());
             connection.end();
         }
     )
@@ -84,7 +93,8 @@ function add_inventory(){
                     // name: 'chosen_item'
                     type: 'list',
                     message: "Which item's inventory would you like to increase?",
-                    choices: product_array,//[1,2,3,4,5,6,7,8,9,10],
+                    choices: product_array,
+                    // choices: [1,2,3,4,5,6,7,8,9,10],
                     name: 'chosen_item'
                 },
                 {
@@ -93,7 +103,12 @@ function add_inventory(){
                     name: 'increase_number'
                 }
             ]).then(function(input){
-                var current_num = res[input.chosen_item-1].stock_quantity += parseInt(input.increase_number,10);
+                var current_num = 0;// res[input.chosen_item-1].stock_quantity += parseInt(input.increase_number,10);
+                for(let i = 0; i < product_array.length; i++){
+                    if(input.chosen_item == product_array[i]){
+                        current_num = res[i].stock_quantity += parseInt(input.increase_number,10);
+                    }
+                }
                 console.log()
                 connection.query(
                     'UPDATE product_list SET ? WHERE ?',
