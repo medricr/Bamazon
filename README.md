@@ -21,5 +21,5 @@ bamazon_supervisor.js treats the user like a supervisor, allowing them to view s
 
    * When viewing sales, the program takes all departments in the database, and left joins them with items that share those departments.        Then, it takes the total sales from that department, and subtracts the overhead cost of department maintenance from them, producing a      net sales figure.
    
-   * when creating a department, the user is prompted to enter the new departments name, as well as the overhead cost of maintaing that department. Then, they
+   * when creating a department, the user is prompted to enter the new departments name, as well as the overhead cost of maintaing that department. Then, they can choose to create a new item for that department, using the same item creation function from bamazon_manager.js, or, a placeholder item with a generic name & arbitraty attributes will be inserted into the product list. This last step (populating the new department with an item) helps to prevent run-time errors, as the program will not be attempting to display and preform calculations with null values. 
 
