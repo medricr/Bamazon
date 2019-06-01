@@ -94,9 +94,18 @@ function add_inventory(){
                 {
                     type: 'input',
                     message: 'How many more units would you like to order?',
-                    name: 'increase_number'
+                    name: 'increase_number',
+                    validate: function(value){
+                        if(isNaN(value) || value % 1 != 0){
+                            console.log('\nPlease enter an integer....\n');
+                        }
+                    }
                 }
             ]).then(function(input){
+                // if(isNaN(input.increase_number)){
+                //     console.log('Non numeric value submitted in field requiring numeric value...program terminating...');
+                //     connection.end();
+                // }
                 var current_num = 0;
                 for(let i = 0; i < product_array.length; i++){
                     if(input.chosen_item == product_array[i]){
@@ -141,12 +150,22 @@ function add_item(){
         {
             type: 'input',
             message: "What is the cost-per-unit of this new item?",
-            name: "new_price"
+            name: "new_price",
+            validate: function(value){
+                if(isNaN(value) || value % 1 != 0){
+                    console.log('\nPlease enter an integer....\n');
+                }
+            }
         },
         {
             type: 'input',
             message: 'How many of this item will we initially have in stock?',
-            name: 'new_count'
+            name: 'new_count',
+            validate: function(value){
+                if(isNaN(value) || value % 1 != 0){
+                    console.log('\nPlease enter an integer....\n');
+                }
+            }
         }
     ]).then(function(new_input){
         connection.query(

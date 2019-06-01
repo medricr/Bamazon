@@ -43,15 +43,24 @@ function user_propmt(){
         {
             type: 'input',
             message: 'Please enter the ID of the product you would like to purchase',
-            name: 'product_id'
+            name: 'product_id',
+            validate: function(value){
+                if(isNaN(value) || value % 1 != 0){
+                    console.log('\nPlease enter a valid ID....\n');
+                }
+            }
         },
         {
             type: 'input',
             message: 'Please enter the quantity of this product that you would like to purchase',
-            name: 'number_purchased'
+            name: 'number_purchased',
+            validate: function(value){
+                if(isNaN(value) || value % 1 != 0){
+                    console.log('\nPlease enter an integer....\n');
+                }
+            }
         }
     ]).then(function(user_input){
-        // call the update function, passing the user's input
         update_db(user_input.product_id,user_input.number_purchased);
     })
 }

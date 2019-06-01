@@ -74,12 +74,22 @@ function create_dept(){
         {
             type: 'input',
             message: 'What is the overhead cost of maintaining this department?',
-            name: 'o_costs'
+            name: 'o_costs',
+            validate: function(value){
+                if(isNaN(value) || value % 1 != 0){
+                    console.log('\nPlease enter an integer....\n');
+                }
+            }
         },
         {
             type: 'confirm',
             message: 'Would you like to add a product to this new deparment? (if you elect not to, a placeholder product will be created...)',
-            name: 'new_item'
+            name: 'new_item',
+            validate: function(value){
+                if(isNaN(value) || value % 1 != 0){
+                    console.log('\nPlease enter an integer....\n');
+                }
+            }
 
         }
     ]).then(function(input){ 
@@ -109,12 +119,22 @@ function add_item(new_dept){
         {
             type: 'input',
             message: "What is the cost-per-unit of this new item?",
-            name: "new_price"
+            name: "new_price",
+            validate: function(value){
+                if(isNaN(value)){
+                    console.log('\nPlease enter an integer....\n');
+                }
+            }
         },
         {
             type: 'input',
             message: 'How many of this item will we initially have in stock?',
-            name: 'new_count'
+            name: 'new_count',
+            validate: function(value){
+                if(isNaN(value) || value % 1 != 0){
+                    console.log('\nPlease enter an integer....\n');
+                }
+            }
         }
     ]).then(function(new_input){
         connection.query(
