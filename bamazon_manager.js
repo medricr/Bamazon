@@ -159,7 +159,8 @@ function add_item(){
                 product_name: new_input.new_name,
                 department_name: new_input.new_dept,
                 price: new_input.new_price,
-                stock_quantity: new_input.new_count
+                stock_quantity: new_input.new_count,
+                product_sales: 0
 
             },
             function(err,res){
