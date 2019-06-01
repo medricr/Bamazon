@@ -31,11 +31,9 @@ function supervisor_prompt(){
         console.log(supervisor_input.supervisor_choice);
         switch(supervisor_input.supervisor_choice){
             case 'View Product Sales by Department':
-                // console.log('product view test');
                 view_sales();
                 break;
             case 'Create a new Department':
-                console.log('department create test');
                 create_dept();
                 break;
             default:
@@ -47,21 +45,13 @@ function supervisor_prompt(){
 // A function which allows the user to see the sales by department where sold items 
 function view_sales(){
     connection.query(
-        // 'SELECT * FROM department_list',
-        // function(err,res){
-        //     if(err) throw err;
-        //     console.log(res);
-        //     connection.end();
-        // }
+        // the following query selects all existing departments, as well as the products in them, and links them together by department name
         'SELECT department_list.id,department_list.dept_name,department_list.overhead_costs,SUM(product_list.product_sales) AS sales, COUNT(product_list.id) FROM department_list LEFT JOIN product_list ON department_list.dept_name = product_list.department_name GROUP BY dept_name',
-        // 'SELECT * FROM department_list',
         function(err,res){
             if(err) throw err;
             var sales_table = new table({
                 head: ['ID','Department Name','Overhead Costs','Product Sales','Total Profit']
-                // colWidths: 100
             });
-            // console.log(res);
             for(let i = 0; i < res.length; i++){
                 var profits = (res[i].sales - res[i].overhead_costs);
                 sales_table.push(
@@ -74,12 +64,6 @@ function view_sales(){
     )
 }
 // allows the user to create a department
-// TODO
-// allow the user to create a department & offer them the option to create a inital item to populate that department
-// if they do...
-// set the name & price of that item, and set the sales to 0
-// if they choose not to..
-// create a generic item (name: item, price: 0, stock: 0, etc.....)
 function create_dept(){
     inquirer.prompt([
         {
@@ -99,12 +83,6 @@ function create_dept(){
 
         }
     ]).then(function(input){ 
-        // if(new_item){
-        //     add_item();
-        // }
-        // else{
-
-        // }
         connection.query(
             'INSERT INTO department_list SET ?',
             {
@@ -116,7 +94,6 @@ function create_dept(){
                 console.log(res);
                 if(input.new_item){add_item(input.dept_name);}
                 else{add_default(input.dept_name);}
-                // connection.end();
             }
         )
     })
@@ -129,11 +106,6 @@ function add_item(new_dept){
             message: 'What new product would you like to add to the inventory?',
             name: 'new_name'
         },
-        // {
-        //     type: 'input',
-        //     message: 'Which department will this item be filed under?',
-        //     name: 'new_dept'
-        // },
         {
             type: 'input',
             message: "What is the cost-per-unit of this new item?",
@@ -165,28 +137,6 @@ function add_item(new_dept){
 }
 
 function add_default(new_dept){
-    // inquirer.prompt([
-    //     {
-    //         type: 'input',
-    //         message: 'What new product would you like to add to the inventory?',
-    //         name: 'new_name'
-    //     },
-    //     // {
-    //     //     type: 'input',
-    //     //     message: 'Which department will this item be filed under?',
-    //     //     name: 'new_dept'
-    //     // },
-    //     {
-    //         type: 'input',
-    //         message: "What is the cost-per-unit of this new item?",
-    //         name: "new_price"
-    //     },
-    //     {
-    //         type: 'input',
-    //         message: 'How many of this item will we initially have in stock?',
-    //         name: 'new_count'
-    //     }
-    // ]).then(function(new_input){
         connection.query(
             'INSERT INTO product_list SET ?',
             {

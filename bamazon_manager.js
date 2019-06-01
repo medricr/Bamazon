@@ -14,8 +14,6 @@ var connection = mysql.createConnection({
 // main function to run the manager program
 connection.connect(function(err){
     if(err) throw err;
-    console.log("manager test fire");
-    // connection.end();
     manager_prompt();
 })
 // main prompt function
@@ -36,7 +34,7 @@ function manager_prompt(){
                 show_low();
                 break;
             case 'Add to Inventory':
-                add_inventory(); //TODO
+                add_inventory();
                 break;
             case 'Add New Product':
                 add_item();
@@ -91,7 +89,6 @@ function add_inventory(){
                     type: 'list',
                     message: "Which item's inventory would you like to increase?",
                     choices: product_array,
-                    // choices: [1,2,3,4,5,6,7,8,9,10],
                     name: 'chosen_item'
                 },
                 {
@@ -100,7 +97,7 @@ function add_inventory(){
                     name: 'increase_number'
                 }
             ]).then(function(input){
-                var current_num = 0;// res[input.chosen_item-1].stock_quantity += parseInt(input.increase_number,10);
+                var current_num = 0;
                 for(let i = 0; i < product_array.length; i++){
                     if(input.chosen_item == product_array[i]){
                         current_num = res[i].stock_quantity += parseInt(input.increase_number,10);
@@ -119,7 +116,6 @@ function add_inventory(){
                     ],
                     function(err,res){
                         if(err) throw err;
-                        // console.log(res);
                         show_items();
 
                     }

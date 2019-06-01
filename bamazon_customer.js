@@ -16,7 +16,6 @@ connection.connect(function(err){
     if(err) throw err;
     // display products
     show_products();
-    // user_propmt();
 })
 
 function show_products(){
@@ -40,7 +39,6 @@ function show_products(){
 }
 
 function user_propmt(){
-    // show_products();
     inquirer.prompt([
         {
             type: 'input',
